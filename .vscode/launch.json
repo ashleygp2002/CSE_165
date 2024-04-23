@@ -6,8 +6,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/gabrieldiaz/Desktop/165_Project",
-      "program": "/Users/gabrieldiaz/Desktop/165_Project/build/Debug/outDebug"
+      "cwd": "/Users/gabrieldiaz/Desktop/CSE_165",
+      "program": "/Users/gabrieldiaz/Desktop/CSE_165/build/Debug/outDebug"
     }
   ]
 }

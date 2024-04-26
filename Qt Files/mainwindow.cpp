@@ -70,22 +70,94 @@
 // }
 
 
+// #include "mainwindow.h"
+// #include "ui_mainwindow.h"
+// #include <Qfile>
+// #include <QStandardPaths>
+// #include <QMessageBox>
+// #include <QRegularExpression> // Add this include for QRegularExpression
+
+// MainWindow::MainWindow(QWidget *parent)
+//     : QMainWindow(parent)
+//     , ui(new Ui::MainWindow)
+// {
+//     ui->setupUi(this);
+//     this->setWindowTitle("Todo List"); //The title for the todo list
+
+//     QFile file(path);
+
+//     if(!file.open(QIODevice::ReadWrite)){
+//         QMessageBox::information(0, "error", file.errorString());
+//     }
+
+//     QTextStream in(&file);
+
+//     while(!in.atEnd()) {
+//         QString task = in.readLine();
+//         if (!task.isEmpty()) {
+//             QListWidgetItem* item = new QListWidgetItem("• " + task, ui->listWidget); // Prepend bullet point
+//             ui->listWidget->addItem(item);
+//             item->setFlags(item->flags() | Qt::ItemIsEditable);
+//         }
+//     }
+
+//     file.close();
+// }
+
+// MainWindow::~MainWindow()
+// {
+//     delete ui;
+
+//     QFile file(path);
+
+//     if(!file.open(QIODevice::ReadWrite)){
+//         QMessageBox::information(0, "error", file.errorString());
+//     }
+
+//     QTextStream out(&file);
+
+//     for (int i = 0; i < ui->listWidget->count(); ++i){
+//         QString task = ui->listWidget->item(i)->text();
+//         task.remove(QRegularExpression("^\\s*•\\s*")); // Remove bullet point using QRegularExpression
+//         out << task << "\n";
+//     }
+
+//     file.close();
+// }
+
+// void MainWindow::on_btnAdd_clicked()
+// {
+//     QListWidgetItem* item = new QListWidgetItem("• " + ui->txtTask->text(), ui->listWidget);
+//     ui->listWidget->addItem(item);
+//     item->setFlags(item->flags() | Qt::ItemIsEditable);
+//     ui->txtTask->clear();
+//     ui->txtTask->setFocus();
+// }
+
+// void MainWindow::on_btnRemove_clicked()
+// {
+//     QListWidgetItem* item = ui->listWidget->takeItem(ui->listWidget->currentRow());
+//     delete item;
+// }
+
+// void MainWindow::on_btnRemoveAll_clicked()
+// {
+//     ui->listWidget->clear();
+// }
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QFile>
+#include <Qfile>
 #include <QStandardPaths>
 #include <QMessageBox>
-#include <QPainter>
+#include <QRegularExpression> // Add this include for QRegularExpression
 
-MainWindow::MainWindow(QWidget *parent)
+    MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+, ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-    // Set custom style to remove default bullets
-    ui->listWidget->setStyleSheet("QListWidget::item { border-bottom: 1px solid black; }");
+    this->setWindowTitle("Todo List"); //The title for the todo list
 
     QFile file(path);
 
@@ -96,9 +168,12 @@ MainWindow::MainWindow(QWidget *parent)
     QTextStream in(&file);
 
     while(!in.atEnd()) {
-        QListWidgetItem* item = new QListWidgetItem(in.readLine(), ui->listWidget);
-        ui->listWidget->addItem(item);
-        item->setFlags(item->flags() | Qt::ItemIsEditable);
+        QString task = in.readLine();
+        if (!task.isEmpty()) {
+            QListWidgetItem* item = new QListWidgetItem("• " + task, ui->listWidget); // Prepend bullet point
+            ui->listWidget->addItem(item);
+            item->setFlags(item->flags() | Qt::ItemIsEditable);
+        }
     }
 
     file.close();
@@ -117,7 +192,9 @@ MainWindow::~MainWindow()
     QTextStream out(&file);
 
     for (int i = 0; i < ui->listWidget->count(); ++i){
-        out<<ui->listWidget->item(i)->text()<<"\n";
+        QString task = ui->listWidget->item(i)->text();
+        task.remove(QRegularExpression("^\\s*•\\s*")); // Remove bullet point using QRegularExpression
+        out << task << "\n";
     }
 
     file.close();
@@ -125,13 +202,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_btnAdd_clicked()
 {
-    QListWidgetItem* item = new QListWidgetItem(ui->txtTask->text(), ui->listWidget);
+    QListWidgetItem* item = new QListWidgetItem("• " + ui->txtTask->text(), ui->listWidget);
     ui->listWidget->addItem(item);
     item->setFlags(item->flags() | Qt::ItemIsEditable);
     ui->txtTask->clear();
     ui->txtTask->setFocus();
 }
-
 
 void MainWindow::on_btnRemove_clicked()
 {
@@ -139,22 +215,7 @@ void MainWindow::on_btnRemove_clicked()
     delete item;
 }
 
-
 void MainWindow::on_btnRemoveAll_clicked()
 {
     ui->listWidget->clear();
-}
-
-void MainWindow::paintEvent(QPaintEvent *event)
-{
-    QMainWindow::paintEvent(event);
-
-    QPainter painter(this);
-    painter.setPen(Qt::black);
-
-    // Draw circles for each item in the list
-    for(int i = 0; i < ui->listWidget->count(); ++i) {
-        QRect circleRect(10, 10 + i * 20, 10, 10);
-        painter.drawEllipse(circleRect);
-    }
 }

@@ -75,12 +75,13 @@ private:
 
 
 
-
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QListWidget>
 #include <QStandardPaths>
+#include "task.h" // Include the Task classes
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -104,7 +105,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-
-    QString path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "\\toDoFile.txt";
+    QString path; // Move path variable here
+    QList<Task*> tasks; // Store Task objects instead of QString in the list
 };
+
 #endif // MAINWINDOW_H

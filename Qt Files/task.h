@@ -7,7 +7,7 @@
 class Task {
 public:
     virtual ~Task() {} // Virtual destructor for polymorphism
-    virtual QString getDescription() const = 0; // Pure virtual function
+    virtual QString getDescription() const = 0;
 };
 
 // Derived class representing a simple task
